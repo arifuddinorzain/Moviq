@@ -7,12 +7,23 @@ const TMDB_IMG_URL = 'https://image.tmdb.org/t/p';
 
 const Api = {
     baseUrl: 'api.php',
+    _cache: new Map(),
 
     /**
-     * General fetch request helper with error handling
+     * General fetch request helper with high-speed in-memory & Edge caching
      */
     async request(action, params = {}) {
         const queryParams = new URLSearchParams({ action, ...params });
+        const cacheKey = `${action}?${queryParams.toString()}`;
+
+        // Return from client-side in-memory cache if requested within the last 5 minutes (except search)
+        if (action !== 'search' && this._cache.has(cacheKey)) {
+            const entry = this._cache.get(cacheKey);
+            if (Date.now() - entry.time < 300000) { // 5 minutes
+                return entry.data;
+            }
+        }
+
         try {
             const response = await fetch(`${this.baseUrl}?${queryParams.toString()}`);
             if (!response.ok) {
@@ -22,6 +33,9 @@ const Api = {
             if (!result.success) {
                 console.warn(`API Warning [${action}]:`, result.error);
                 return null;
+            }
+            if (action !== 'search') {
+                this._cache.set(cacheKey, { data: result.data, time: Date.now() });
             }
             return result.data;
         } catch (error) {
