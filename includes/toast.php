@@ -1,0 +1,2 @@
+<!-- Dynamic Toast Notification Container -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>

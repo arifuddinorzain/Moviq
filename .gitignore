@@ -1,0 +1,26 @@
+# Cache directory
+cache/*
+!cache/.gitkeep
+
+# Environment & local credentials
+.env
+.env.local
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary logs & scratch files
+*.log
+scratch/
+scratch_*.txt
