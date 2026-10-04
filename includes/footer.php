@@ -27,8 +27,7 @@
                 <ul class="footer-links">
                     <li><a href="#movies" class="footer-nav-link" data-nav="movies"><i class="fa-solid fa-film"></i> Popular Movies</a></li>
                     <li><a href="#tv" class="footer-nav-link" data-nav="tv"><i class="fa-solid fa-tv"></i> TV Series</a></li>
-                    <li><a href="#livetv" class="footer-nav-link" data-nav="livetv"><i class="fa-solid fa-tower-broadcast"></i> 24/7 Live TV</a></li>
-                    <li><a href="#trending" class="footer-nav-link" data-nav="trending"><i class="fa-solid fa-fire"></i> Trending Now</a></li>
+                    <li><a href="#explore" class="footer-nav-link" data-nav="explore"><i class="fa-solid fa-compass"></i> Explore & Filter</a></li>
                     <li><a href="#explore" class="footer-nav-link" data-nav="explore"><i class="fa-solid fa-star"></i> Top Rated</a></li>
                 </ul>
             </div>
@@ -76,11 +75,11 @@
     </div>
 </footer>
 
-<!-- JavaScript Bundles -->
+<!-- JavaScript Bundles (with cache-busting versions) -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
-<script src="assets/js/api.js"></script>
-<script src="assets/js/watchlist.js"></script>
-<script src="assets/js/coinSystem.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/api.js?v=<?php echo file_exists(__DIR__ . '/../assets/js/api.js') ? filemtime(__DIR__ . '/../assets/js/api.js') : time(); ?>"></script>
+<script src="assets/js/watchlist.js?v=<?php echo file_exists(__DIR__ . '/../assets/js/watchlist.js') ? filemtime(__DIR__ . '/../assets/js/watchlist.js') : time(); ?>"></script>
+<script src="assets/js/coinSystem.js?v=<?php echo file_exists(__DIR__ . '/../assets/js/coinSystem.js') ? filemtime(__DIR__ . '/../assets/js/coinSystem.js') : time(); ?>"></script>
+<script src="assets/js/app.js?v=<?php echo file_exists(__DIR__ . '/../assets/js/app.js') ? filemtime(__DIR__ . '/../assets/js/app.js') : time(); ?>"></script>
 </body>
 </html>

@@ -842,8 +842,17 @@ const App = {
             const rating = slide.vote_average ? Number(slide.vote_average).toFixed(1) : 'N/A';
             const genreNames = (slide.genre_ids || []).slice(0, 3).map(id => this.genresMap.movie[id] || 'Cinema').filter(Boolean);
 
+            const backdropMobile = Api.getImageUrl(slide.backdrop_path, 'w780');
+            const backdropDesktop = slide.backdrop_url || Api.getImageUrl(slide.backdrop_path, 'w1280');
+            const backdropSrcset = Api.getBackdropSrcset(slide.backdrop_path);
+
             slideEl.innerHTML = `
-                <img class="hero-backdrop-img" src="${slide.backdrop_url || Api.getImageUrl(slide.backdrop_path, 'original')}" alt="${slide.title || 'Movie backdrop'}" loading="${index === 0 ? 'eager' : 'lazy'}">
+                <img class="hero-backdrop-img" 
+                     src="${backdropDesktop}" 
+                     ${backdropSrcset ? `srcset="${backdropSrcset}" sizes="100vw"` : ''} 
+                     alt="${slide.title || 'Movie backdrop'}" 
+                     loading="${index === 0 ? 'eager' : 'lazy'}" 
+                     decoding="async">
                 <div class="hero-overlay-gradient"></div>
                 <div class="hero-content">
                     <div class="hero-badge-row">
@@ -1141,14 +1150,21 @@ const App = {
         card.dataset.type = type;
 
         const title = item.title || item.name || 'Untitled';
-        const posterUrl = Api.getImageUrl(item.poster_path, 'w500');
+        const posterUrl = Api.getPosterUrl(item.poster_path);
+        const posterSrcset = item.poster_path ? Api.getPosterSrcset(item.poster_path) : '';
         const releaseYear = Api.formatYear(item.release_date || item.first_air_date);
         const rating = item.vote_average ? Number(item.vote_average).toFixed(1) : 'N/A';
         const isSaved = Watchlist.has(item.id, type);
 
         card.innerHTML = `
             <div class="poster-wrapper">
-                <img class="card-poster-img" src="${posterUrl}" alt="${title.replace(/"/g, '&quot;')}" loading="lazy" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
+                <img class="card-poster-img" 
+                     src="${posterUrl}" 
+                     ${posterSrcset ? `srcset="${posterSrcset}" sizes="(max-width: 600px) 160px, (max-width: 1024px) 240px, 300px"` : ''} 
+                     alt="${title.replace(/"/g, '&quot;')}" 
+                     loading="lazy" 
+                     decoding="async" 
+                     onerror="this.onerror=null; this.removeAttribute('srcset'); this.src=Api.getPosterPlaceholder();">
                 <div class="card-rating-badge"><i class="fa-solid fa-star"></i> ${rating}</div>
                 <div class="card-type-badge">${type === 'tv' ? 'TV Series' : 'Movie'}</div>
                 <div class="card-play-overlay">
@@ -1230,7 +1246,7 @@ const App = {
             const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
 
             itemEl.innerHTML = `
-                <img class="autocomplete-poster ${isPerson ? 'autocomplete-person-avatar' : ''}" src="${posterUrl}" alt="${title.replace(/"/g, '&quot;')}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                <img class="autocomplete-poster ${isPerson ? 'autocomplete-person-avatar' : ''}" src="${posterUrl}" alt="${title.replace(/"/g, '&quot;')}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                 <div class="autocomplete-info">
                     <div class="autocomplete-title">${title}</div>
                     <div class="autocomplete-meta">
@@ -1503,7 +1519,7 @@ const App = {
             card.innerHTML = `
                 <div class="channel-card-top">
                     <div class="channel-card-logo">
-                        <img src="${ch.logo}" alt="${ch.name.replace(/"/g, '&quot;')}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/livetv_icon.svg';">
+                        <img src="${ch.logo}" alt="${ch.name.replace(/"/g, '&quot;')}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/livetv_icon.svg';">
                     </div>
                     <div class="channel-card-status">
                         <span class="live-pill"><span class="live-dot-pulse"></span> LIVE</span>
@@ -1564,7 +1580,7 @@ const App = {
         if (countryEl) countryEl.textContent = `${channel.country} (${channel.language || 'EN'})`;
         if (descEl) descEl.textContent = channel.description || '24/7 Free Live Broadcast';
         if (logoWrap) {
-            logoWrap.innerHTML = `<img src="${channel.logo}" alt="${channel.name.replace(/"/g, '&quot;')}" class="current-channel-logo-img" onerror="this.onerror=null; this.outerHTML='<i class=\\'fa-solid fa-tower-broadcast default-tv-icon\\'></i>';">`;
+            logoWrap.innerHTML = `<img src="${channel.logo}" alt="${channel.name.replace(/"/g, '&quot;')}" class="current-channel-logo-img" decoding="async" onerror="this.onerror=null; this.outerHTML='<i class=\\'fa-solid fa-tower-broadcast default-tv-icon\\'></i>';">`;
         }
 
         // Highlight active card in grid
@@ -1796,8 +1812,8 @@ const App = {
 
         const title = data.title || data.name || 'Untitled';
         const tagline = data.tagline ? `"${data.tagline}"` : '';
-        const backdropUrl = Api.getImageUrl(data.backdrop_path, 'original');
-        const posterUrl = Api.getImageUrl(data.poster_path, 'w500');
+        const backdropUrl = Api.getBackdropUrl(data.backdrop_path, 'w1280');
+        const posterUrl = Api.getPosterUrl(data.poster_path);
         const releaseDate = Api.formatFullDate(data.release_date || data.first_air_date);
         const releaseYear = Api.formatYear(data.release_date || data.first_air_date);
         const runtime = data.runtime ? Api.formatRuntime(data.runtime) : (data.episode_run_time && data.episode_run_time[0] ? `${data.episode_run_time[0]}m / ep` : 'N/A');
@@ -1819,7 +1835,7 @@ const App = {
             return `
                 <div class="cast-item" onclick="App.openPersonModal(${c.id})">
                     <div class="cast-img-box">
-                        <img src="${avatarUrl}" alt="${actorName.replace(/"/g, '&quot;')}" loading="lazy" onerror="this.onerror=null; this.src=Api.getProfilePlaceholder();">
+                        <img src="${avatarUrl}" alt="${actorName.replace(/"/g, '&quot;')}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src=Api.getProfilePlaceholder();">
                     </div>
                     <div class="cast-name" title="${actorName.replace(/"/g, '&quot;')}">${actorName}</div>
                     <div class="cast-role" title="${charName.replace(/"/g, '&quot;')}">${charName}</div>
@@ -1846,7 +1862,7 @@ const App = {
                 <div class="details-hero-overlay"></div>
                 <div class="details-hero-content">
                     <div class="details-poster-box">
-                        <img src="${posterUrl}" alt="${title}">
+                        <img src="${posterUrl}" alt="${title}" decoding="async">
                     </div>
                     <div class="details-title-info">
                         <h2 class="details-title">${title}</h2>
@@ -1914,7 +1930,7 @@ const App = {
                             ${videosList.map(v => `
                                 <div class="video-card-thumb" onclick="App.openTrailerModal('${v.key}', '${title.replace(/'/g, "\\'")} — ${v.name.replace(/'/g, "\\'")}')">
                                     <div class="video-thumb-img-box">
-                                        <img src="https://img.youtube.com/vi/${v.key}/mqdefault.jpg" alt="${v.name}" loading="lazy">
+                                        <img src="https://img.youtube.com/vi/${v.key}/mqdefault.jpg" alt="${v.name}" loading="lazy" decoding="async">
                                         <div class="video-play-badge"><i class="fa-solid fa-play"></i></div>
                                     </div>
                                     <div class="video-card-info">
@@ -1951,7 +1967,7 @@ const App = {
                         ${data.similar.results.slice(0, 12).map(sim => `
                             <div class="movie-card" onclick="App.openDetails(${sim.id}, '${type}')">
                                 <div class="poster-wrapper">
-                                    <img class="card-poster-img" src="${Api.getImageUrl(sim.poster_path, 'w500')}" alt="${sim.title || sim.name}">
+                                    <img class="card-poster-img" src="${Api.getPosterUrl(sim.poster_path)}" alt="${sim.title || sim.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
                                     <div class="card-rating-badge"><i class="fa-solid fa-star"></i> ${sim.vote_average ? Number(sim.vote_average).toFixed(1) : 'N/A'}</div>
                                 </div>
                                 <div class="card-info">
@@ -2109,7 +2125,7 @@ const App = {
 
         body.innerHTML = `
             <div class="person-profile-header">
-                <img class="person-avatar-lg" src="${photoUrl}" alt="${data.name}" onerror="this.onerror=null; this.src=Api.getProfilePlaceholder();">
+                <img class="person-avatar-lg" src="${photoUrl}" alt="${data.name}" decoding="async" onerror="this.onerror=null; this.src=Api.getProfilePlaceholder();">
                 <div>
                     <h2 class="person-name">${data.name}</h2>
                     <div style="display: flex; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap;">
@@ -2132,7 +2148,7 @@ const App = {
                 ${credits.map(c => `
                     <div class="movie-card" onclick="App.closePersonModal(); App.openDetails(${c.id}, '${c.media_type || (c.first_air_date ? 'tv' : 'movie')}');">
                         <div class="poster-wrapper">
-                            <img class="card-poster-img" src="${Api.getImageUrl(c.poster_path, 'w500')}" alt="${c.title || c.name}" loading="lazy" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
+                            <img class="card-poster-img" src="${Api.getPosterUrl(c.poster_path)}" alt="${c.title || c.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
                             <div class="card-rating-badge"><i class="fa-solid fa-star"></i> ${c.vote_average ? Number(c.vote_average).toFixed(1) : 'N/A'}</div>
                             <div class="card-type-badge">${c.media_type === 'tv' || c.first_air_date ? 'TV' : 'Movie'}</div>
                         </div>
@@ -2341,7 +2357,7 @@ const App = {
             .map(gid => `<span class="revealed-genre-pill">${GENRE_MAP[gid] || 'Cinema'}</span>`)
             .join(' ');
 
-        const posterUrl = fetchedMovie.poster_path ? Api.getImageUrl(fetchedMovie.poster_path, 'w500') : Api.getPosterPlaceholder();
+        const posterUrl = fetchedMovie.poster_path ? Api.getPosterUrl(fetchedMovie.poster_path) : Api.getPosterPlaceholder();
         const year = Api.formatYear(fetchedMovie.release_date || fetchedMovie.first_air_date);
         const rating = fetchedMovie.vote_average ? Number(fetchedMovie.vote_average).toFixed(1) : '8.0';
         const title = fetchedMovie.title || fetchedMovie.name || 'Mystery Gem';
@@ -2350,7 +2366,7 @@ const App = {
         if (movieCard) {
             movieCard.innerHTML = `
                 <div class="revealed-poster-box">
-                    <img src="${posterUrl}" alt="${title}" loading="eager" onerror="this.src='${Api.getPosterPlaceholder()}'">
+                    <img src="${posterUrl}" alt="${title}" loading="eager" decoding="async" onerror="this.src='${Api.getPosterPlaceholder()}'">
                 </div>
                 <div class="revealed-info-box">
                     <h4 class="revealed-movie-name" title="${title}">${title}</h4>

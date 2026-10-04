@@ -154,11 +154,52 @@ const Api = {
     },
 
     /**
-     * Helper to get full image URL with reliable SVG fallbacks
+     * Check if client viewport is mobile
+     */
+    isMobile() {
+        return typeof window !== 'undefined' && window.innerWidth <= 768;
+    },
+
+    /**
+     * Helper to get full image URL with responsive sizing and reliable SVG fallbacks
      */
     getImageUrl(path, size = 'w500') {
         if (!path) return this.getPosterPlaceholder();
         return `${TMDB_IMG_URL}/${size}${path}`;
+    },
+
+    /**
+     * Get responsive poster image URL tailored for device screen size
+     */
+    getPosterUrl(path, size = null) {
+        if (!path) return this.getPosterPlaceholder();
+        const targetSize = size || (this.isMobile() ? 'w342' : 'w500');
+        return `${TMDB_IMG_URL}/${targetSize}${path}`;
+    },
+
+    /**
+     * Get responsive backdrop URL (avoids multi-megabyte 'original' downloads on mobile)
+     */
+    getBackdropUrl(path, size = null) {
+        if (!path) return '';
+        const targetSize = size || (this.isMobile() ? 'w780' : 'w1280');
+        return `${TMDB_IMG_URL}/${targetSize}${path}`;
+    },
+
+    /**
+     * Generate responsive srcset for movie/TV posters
+     */
+    getPosterSrcset(path) {
+        if (!path) return '';
+        return `${TMDB_IMG_URL}/w185${path} 185w, ${TMDB_IMG_URL}/w342${path} 342w, ${TMDB_IMG_URL}/w500${path} 500w, ${TMDB_IMG_URL}/w780${path} 780w`;
+    },
+
+    /**
+     * Generate responsive srcset for hero backdrops
+     */
+    getBackdropSrcset(path) {
+        if (!path) return '';
+        return `${TMDB_IMG_URL}/w780${path} 780w, ${TMDB_IMG_URL}/w1280${path} 1280w, ${TMDB_IMG_URL}/original${path} 1920w`;
     },
 
     getProfileUrl(path, size = 'w185') {

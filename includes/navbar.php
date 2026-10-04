@@ -30,10 +30,6 @@
                 <span>Live</span>
                 <span class="live-dot-beacon"></span>
             </a>
-            <a href="#trending" class="nav-link" data-nav="trending">
-                <i class="fa-solid fa-fire"></i>
-                <span>Trending</span>
-            </a>
             <a href="#explore" class="nav-link" data-nav="explore">
                 <i class="fa-solid fa-compass"></i>
                 <span>Explore</span>
@@ -90,8 +86,8 @@
                 <span class="btn-tooltip">Daily Dice (+25 Coins)</span>
             </button>
 
-            <!-- Surprise Me / Random Movie -->
-            <button class="action-btn icon-btn surprise-btn" id="surpriseMeBtn" title="Surprise Me! Pick a Random Gem">
+            <!-- Surprise Me / Random Movie (Desktop Only) -->
+            <button class="action-btn icon-btn surprise-btn hide-on-mobile" id="surpriseMeBtn" title="Surprise Me! Pick a Random Gem">
                 <i class="fa-solid fa-dice"></i>
                 <span class="btn-tooltip">Random Movie</span>
             </button>
@@ -165,10 +161,6 @@
             <i class="fa-solid fa-tower-broadcast"></i>
             <span>Live TV</span>
             <span class="mobile-live-badge">LIVE</span>
-        </a>
-        <a href="#trending" class="mobile-nav-item" data-nav="trending">
-            <i class="fa-solid fa-fire"></i>
-            <span>Trending</span>
         </a>
         <a href="#explore" class="mobile-nav-item" data-nav="explore">
             <i class="fa-solid fa-compass"></i>

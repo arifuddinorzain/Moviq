@@ -56,7 +56,7 @@ $releaseDate = $data['release_date'] ?? $data['first_air_date'] ?? '';
 $releaseYear = !empty($releaseDate) ? substr($releaseDate, 0, 4) : 'TBA';
 $rating = isset($data['vote_average']) ? format_rating($data['vote_average']) : 'N/A';
 $voteCount = isset($data['vote_count']) ? number_format($data['vote_count']) : '0';
-$backdropUrl = !empty($data['backdrop_path']) ? tmdb_image($data['backdrop_path'], 'original') : '';
+$backdropUrl = !empty($data['backdrop_path']) ? tmdb_image($data['backdrop_path'], 'w1280') : '';
 $posterUrl = !empty($data['poster_path']) ? tmdb_image($data['poster_path'], 'w500') : '';
 $runtime = ($type === 'movie' && !empty($data['runtime'])) ? format_runtime($data['runtime']) : ($data['number_of_seasons'] ?? 1) . ' Season(s)';
 $genres = $data['genres'] ?? [];
@@ -290,7 +290,7 @@ require_once __DIR__ . '/includes/navbar.php';
                             <a href="watch.php?id=<?php echo $id; ?>&type=tv&s=<?php echo $season; ?>&e=<?php echo $epNum; ?>&server=<?php echo $server; ?>" 
                                class="episode-card <?php echo $isCurrentEp ? 'now-playing' : ''; ?>">
                                 <div class="episode-still-box">
-                                    <img src="<?php echo htmlspecialchars($epStill); ?>" alt="<?php echo htmlspecialchars($epName); ?>" loading="lazy" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
+                                    <img src="<?php echo htmlspecialchars($epStill); ?>" alt="<?php echo htmlspecialchars($epName); ?>" loading="lazy" decoding="async" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
                                     <div class="ep-number-tag">EP <?php echo $epNum; ?></div>
                                     <?php if ($isCurrentEp): ?>
                                         <div class="ep-playing-badge"><i class="fa-solid fa-circle-play"></i> Playing</div>
@@ -317,7 +317,7 @@ require_once __DIR__ . '/includes/navbar.php';
             <div class="watch-details-grid">
                 <!-- Left Poster -->
                 <div class="watch-poster-col">
-                    <img src="<?php echo htmlspecialchars($posterUrl); ?>" alt="<?php echo htmlspecialchars($title); ?>" class="watch-poster-img" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
+                    <img src="<?php echo htmlspecialchars($posterUrl); ?>" alt="<?php echo htmlspecialchars($title); ?>" class="watch-poster-img" decoding="async" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
                 </div>
 
                 <!-- Center/Right Details -->
@@ -376,6 +376,7 @@ require_once __DIR__ . '/includes/navbar.php';
                                             <img src="<?php echo $cImg ? htmlspecialchars($cImg) : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='100' fill='%231e293b'/></svg>"; ?>" 
                                                  alt="<?php echo htmlspecialchars($cName); ?>" 
                                                  loading="lazy" 
+                                                 decoding="async" 
                                                  onerror="this.onerror=null; this.src=Api.getProfilePlaceholder();">
                                         </div>
                                         <div class="cast-name" title="<?php echo htmlspecialchars($cName); ?>"><?php echo htmlspecialchars($cName); ?></div>
@@ -403,13 +404,13 @@ require_once __DIR__ . '/includes/navbar.php';
                         $sId = (int)$sim['id'];
                         $sType = $sim['media_type'] ?? ($type === 'tv' ? 'tv' : 'movie');
                         $sTitle = $sim['title'] ?? $sim['name'] ?? 'Untitled';
-                        $sPoster = !empty($sim['poster_path']) ? tmdb_image($sim['poster_path'], 'w500') : '';
+                        $sPoster = !empty($sim['poster_path']) ? tmdb_image($sim['poster_path'], 'w342') : '';
                         $sRating = isset($sim['vote_average']) ? format_rating($sim['vote_average']) : 'N/A';
                         $sYear = !empty($sim['release_date'] ?? $sim['first_air_date'] ?? '') ? substr($sim['release_date'] ?? $sim['first_air_date'], 0, 4) : 'TBA';
                     ?>
                         <div class="movie-card" onclick="window.location.href='watch.php?id=<?php echo $sId; ?>&type=<?php echo $sType; ?>'">
                             <div class="poster-wrapper">
-                                <img class="card-poster-img" src="<?php echo htmlspecialchars($sPoster); ?>" alt="<?php echo htmlspecialchars($sTitle); ?>" loading="lazy" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
+                                <img class="card-poster-img" src="<?php echo htmlspecialchars($sPoster); ?>" alt="<?php echo htmlspecialchars($sTitle); ?>" loading="lazy" decoding="async" onerror="this.onerror=null; this.src=Api.getPosterPlaceholder();">
                                 <div class="card-rating-badge"><i class="fa-solid fa-star"></i> <?php echo $sRating; ?></div>
                                 <div class="card-type-badge"><?php echo $sType === 'tv' ? 'TV Series' : 'Movie'; ?></div>
                                 <div class="card-play-overlay">

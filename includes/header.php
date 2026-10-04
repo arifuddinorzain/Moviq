@@ -29,8 +29,8 @@
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- App Stylesheet -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- App Stylesheet (with cache-busting version) -->
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo file_exists(__DIR__ . '/../assets/css/style.css') ? filemtime(__DIR__ . '/../assets/css/style.css') : time(); ?>">
 
     <!-- Favicon (Inline SVG) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%237928ca'/><stop offset='100%' stop-color='%23ff0080'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%23080b12'/><path d='M25 25 L45 50 L25 75 Z M45 25 L65 50 L45 75 Z M65 25 L85 50 L65 75 Z' fill='url(%23g)'/></svg>">

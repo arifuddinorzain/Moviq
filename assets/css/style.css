@@ -3738,6 +3738,11 @@ body.theater-mode-active .site-header:hover {
         display: flex !important;
     }
 
+    .surprise-btn,
+    #surpriseMeBtn {
+        display: none !important;
+    }
+
     .search-wrapper {
         max-width: 240px;
     }
@@ -3956,16 +3961,17 @@ body.theater-mode-active .site-header:hover {
 
     .search-wrapper {
         flex: 1 1 auto;
-        max-width: 150px;
-        min-width: 70px;
+        max-width: 320px;
+        min-width: 130px;
     }
 
     .search-input-box {
-        padding: 0.32rem 0.6rem;
+        width: 100%;
+        padding: 0.34rem 0.65rem;
     }
 
     .search-input-box input {
-        font-size: 0.78rem;
+        font-size: 0.8rem;
     }
 
     .search-icon {
@@ -3992,6 +3998,12 @@ body.theater-mode-active .site-header:hover {
 
     .coin-icon {
         font-size: 0.92rem;
+    }
+
+    .surprise-btn,
+    #surpriseMeBtn,
+    .hide-on-mobile {
+        display: none !important;
     }
 
     .icon-btn {
@@ -4773,38 +4785,35 @@ body.theater-mode-active .site-header:hover {
     }
 
     .search-wrapper {
-        max-width: 110px;
-        min-width: 55px;
+        flex: 1 1 auto;
+        max-width: 230px;
+        min-width: 110px;
     }
 
     .search-input-box {
-        padding: 0.28rem 0.45rem;
+        width: 100%;
+        padding: 0.32rem 0.55rem;
     }
 
     .search-input-box input {
-        font-size: 0.74rem;
+        font-size: 0.76rem;
     }
 
     .search-icon {
-        font-size: 0.72rem;
-        margin-right: 0.25rem;
+        font-size: 0.74rem;
+        margin-right: 0.3rem;
     }
 
     .header-actions {
-        gap: 0.25rem;
+        gap: 0.3rem;
         align-items: center;
     }
 
-    .header-actions #headerWatchlistBtn {
+    .header-actions #headerWatchlistBtn,
+    .header-actions #surpriseMeBtn,
+    .header-actions .surprise-btn,
+    .header-actions .hide-on-mobile {
         display: none !important;
-    }
-
-    .header-actions #surpriseMeBtn {
-        display: flex !important;
-        width: 32px;
-        height: 32px;
-        font-size: 0.82rem;
-        flex-shrink: 0;
     }
 
     .coin-badge-btn {
@@ -8402,5 +8411,25 @@ body.vip-active .card-play-btn i {
 
     .livetv-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Mobile Image & GPU Rendering Performance Optimizations */
+    .movie-card {
+        content-visibility: auto;
+        contain-intrinsic-size: 160px 240px;
+    }
+
+    .card-poster-img,
+    .hero-backdrop-img {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+
+    /* Reduce expensive real-time blur computations on mobile chips */
+    .card-rating-badge,
+    .card-type-badge {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(8, 12, 20, 0.94);
     }
 }
